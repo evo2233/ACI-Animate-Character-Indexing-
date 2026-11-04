@@ -1,0 +1,8 @@
+.env
+.chroma/
+__pycache__/
+tests/
+.idea/
+*.pyc
+DEVELOPER_GUIDE.md
+.csv
