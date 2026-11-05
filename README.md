@@ -47,6 +47,26 @@ python -m rag chat --question "What is Rukia Kuchiki's birthday?"
 
 输入 exit 或 Ctrl+C 退出。相对路径均相对于项目根目录；Chroma 自动落盘，无需调用已废弃的 persist()。第二次 index 应显示新增 0。问答直接打开已有数据库，不重新嵌入整个 CSV。
 
+## Bangumi 角色采集（bangumi_lu）
+
+从当前用户的动画收藏中采集主角和配角，输出角色 ID、性别、所属作品、名称、简介及图片链接。
+
+在 `bangumi_lu/.env` 中配置 `BANGUMI_TOKEN=你的访问令牌`，安装上述依赖后，在项目根目录运行：
+
+```powershell
+# 全部动画收藏（默认）
+python -m bangumi_lu
+# 仅采集「在看」作品
+python -m bangumi_lu --type 3
+```
+
+- `--type` 可选值：`1` 想看、`2` 看过、`3` 在看、`4` 搁置、`5` 抛弃；不传时查询全部收藏。
+- 筛选仅影响本次查询；不同状态共用断点和 CSV，CSV 保留所有已采集作品的角色。
+- 输出：`data/character.csv`，UTF-8 BOM 编码，含表头；同一角色在不同作品中分别保留记录。
+- 断点：`data/character_checkpoints/{subject_id}.json`。每完成一部作品先保存断点，再追加 CSV；启动时从断点重建一次 CSV，恢复中断的写入。
+- 请求遇到网络异常、429 或服务器错误时最多尝试 4 次；单部作品抓取失败后继续处理其他作品，重新运行即可补抓。
+- 请保留断点目录，且不要同时运行多个采集进程。已完成作品不会自动刷新；需要更新时删除对应 JSON 后重新运行。CSV 中的手动修改会在下次重建时被覆盖。
+
 ## 配置和常见问题
 
 - 连接拒绝：启动 Ollama，检查端口与 OLLAMA_BASE_URL；模型不存在：核对 ollama list 中的完整标签。
