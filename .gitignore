@@ -5,6 +5,6 @@ tests/
 .idea/
 data/
 *.pyc
-.csv
-.json
-.bat
+*.csv
+*.json
+*.bat
