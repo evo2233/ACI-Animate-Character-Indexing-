@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>角色属性录入</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main>
+  <header><div><span class="eyebrow">CHARACTER ATTRIBUTES</span><h1>角色属性录入</h1></div><span id="file"></span></header>
+  <section class="toolbar">
+    <strong id="column"></strong>
+    <label>筛选 <select id="filter"><option value="all">全部角色</option><option value="filled">属性有值</option><option value="empty">属性为空</option></select></label>
+    <form id="jump-form"><label>原始序号 <input id="jump" type="number" min="1" required></label><button>跳转</button></form>
+  </section>
+  <div id="status" role="status" aria-live="polite">正在读取 CSV…</div>
+  <section id="editor" hidden>
+    <div class="image-panel"><a id="image-link" target="_blank" rel="noopener noreferrer"><img id="image" alt="角色图片" referrerpolicy="no-referrer" hidden></a><p id="image-status"></p><button id="retry" type="button">重新加载图片</button></div>
+    <div class="details">
+      <p id="position" class="muted"></p><h2 id="name"></h2><p id="subject"></p>
+      <label class="value-label" for="value">属性值 <span class="muted">可选快捷值，也可自由输入</span></label>
+      <input id="value" type="text" autocomplete="off" placeholder="输入属性；留空保存可清除原值">
+      <div id="options" class="options">{% for option in options %}<button type="button" data-value="{{ option }}">{{ option }}</button>{% endfor %}</div>
+      <p class="hint">选项只填入输入框，点击保存后才写入 CSV。支持 Enter 保存并下一位。</p>
+      <div class="actions"><button id="previous">上一位</button><button id="save" class="primary">保存并下一位</button><button id="next">跳过 / 下一位</button></div>
+      <p class="hint">只保存最新值，不记录历史。图片可点击放大查看。</p>
+    </div>
+  </section>
+  <p id="empty" hidden>当前筛选没有角色。可切换筛选，或输入原始序号跳转。</p>
+</main>
+<script>window.editorToken = {{ token|tojson }};</script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body></html>
